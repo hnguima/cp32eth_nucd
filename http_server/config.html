@@ -1,0 +1,275 @@
+<!DOCTYPE html><html>
+<head>
+    <meta charset="UTF-8">
+    <!-- <link rel="stylesheet" href="./style/to.css"> -->
+    <link rel="stylesheet" href="./style/index.css">
+    <link rel="icon" href="./img/logo.svg">
+    
+    <title>ATI</title>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <div class="header">
+        <a class="btn btn-sidebar" href="/"><img src="./img/home.svg"></a>
+        <a class="btn btn-config" href="/config"><img src="./img/gear.svg"></a>
+        <a class="btn btn-logo" href="https://ati.com.br/"><img src="./img/logo.svg" width="135" height="48"></a>
+        <a class="hidden" style="position: absolute; bottom: 10px; color: var(--azul-medio-ati); font-weight: bold;" id="header-root">Admin</a>
+    </div>
+    
+    <div class="sidebar">
+        <a id="info-tab" class="active" onclick="sidebarChangeTab(this)"><img src="img/info.svg">Info</a>
+        <a id="redes-tab" onclick="sidebarChangeTab(this)"><img src="img/web.svg">Redes</a>
+        <a id="ferramentas-tab" onclick="sidebarChangeTab(this)"><img src="img/tools.svg">Ferrramentas</a>
+        
+        <div class="save-config-container">
+            <button id="save-button" class="button hidden" onclick="saveConfig(this)">
+                <div id="save-button-popup" class="button-popup"></div>
+                <img src="img/save.svg">
+                <span>Salvar Alterações</span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="main-config" id="slider">
+        
+        <div id="info" class="configdiv active">
+            
+            <div class="maindiv">
+                <div class="maindiv-title">
+                    <img src="./img/info.svg"><h2>Info</h2>
+                </div>
+                <form class="details-container" id="info" action="javascript:;" onsubmit="sendConfig(this)">
+                    <textarea name="description" class= "textbox" type="text" id="description" placeholder="Descrição" oninput="filterInput(this)" onchange="inputChanged(this)"></textarea>
+                    <span class="popup"></span>
+                    <input class="button" type="button" value="Alterar" onclick="changeInfoConfig(this)">
+                </form>
+            </div>
+            
+            <div class="maindiv">
+                <div class="maindiv-title"><img src="./img/person.svg"><h2>Login</h2></div>
+                
+                <form class="details-container" id="login" action="javascript:;" onsubmit="sendConfig(this)">
+                    
+                    <input class= "textbox" maxLength=30 type="text" id="username" name="username" placeholder="Usuário" oninput="filterInput(this)" onchange="inputChanged(this)">
+                    <input class= "textbox" maxLength=30 type="password" id="password-login-1" name="password" placeholder="Senha" oninput="filterInput(this)" onchange="inputChanged(this)">
+                    <div class= "pw-with-eye">
+                        <input class= "textbox" maxLength=30 type="password" id="password-login-2" placeholder="Repita a senha" oninput="filterInput(this)" onchange="inputChanged(this)">
+                        <div class="eye" id="loginEye" onmousedown="revealFields(this, true)" onmouseout="revealFields(this, false)" onmouseup="revealFields(this, false)" ontouchstart="revealFields(this, true)" ontouchend="revealFields(this, false)">
+                            <img style="user-select: none" src="./img/eye.svg">
+                        </div>
+                    </div>
+                    
+                    <span class="popup"></span>
+                </form>
+            </div>
+                        
+            <div class="maindiv hidden">
+                <div class="maindiv-title"><img src="./img/lock.svg"><h2>Acesso Root</h2></div>
+                
+                <form class="details-container" id="admin" action="javascript:;" onsubmit="sendConfig(this)">
+                    
+                    <input class= "textbox" maxLength=30 type="text" id="username-root" name="username" placeholder="Usuário" oninput="filterInput(this)" onchange="inputChanged(this)">
+                    <input class= "textbox" maxLength=30 type="password" id="password-root-1" name="password" placeholder="Senha" oninput="filterInput(this)" onchange="inputChanged(this)">
+                    <div class= "pw-with-eye">
+                        <input class= "textbox" maxLength=30 type="password" id="password-root-2" placeholder="Repita a senha" oninput="filterInput(this)" onchange="inputChanged(this)">
+                        <div class="eye" id="rootEye" onmousedown="revealFields(this, true)" onmouseout="revealFields(this, false)" onmouseup="revealFields(this, false)" ontouchstart="revealFields(this, true)" ontouchend="revealFields(this, false)">
+                            <img style="user-select: none" src="./img/eye.svg">
+                        </div>
+                    </div>
+                    
+                    <span class="popup"></span>
+                </form>
+            </div>
+
+            <div class="save-config-padding"></div>
+            
+        </div>
+        
+        <div id="redes" class="configdiv">
+            <div class="maindiv">
+                <div class="maindiv-title"><img src="./img/net.svg"><h2>Ethernet</h2></div>
+                
+                <form class="details-container" id="ip" action="javascript:;" onsubmit="sendConfig(this)">
+                    <h3>Endereço IP:</h3>
+                    <div style="display: flex; flex-direction: row; align-items: flex-end; justify-content: space-between; ">
+                        <input class= "textbox ip" type="text" maxLength=3 id="ip-0" name="ip" value=0 oninput="filterInput(this)" onchange="inputChanged(this)">
+                        <input class= "textbox ip" type="text" maxLength=3 id="ip-1" name="ip" value=0 oninput="filterInput(this)" onchange="inputChanged(this)">
+                        <input class= "textbox ip" type="text" maxLength=3 id="ip-2" name="ip" value=0 oninput="filterInput(this)" onchange="inputChanged(this)">
+                        <input class= "textbox ip" type="text" maxLength=3 id="ip-3" name="ip" value=0 oninput="filterInput(this)" onchange="inputChanged(this)">
+                    </div>
+                    <h3>Mask:</h3>
+                    <div style="display: flex; flex-direction: row; align-items: flex-end; justify-content: space-between; ">
+                        <input class= "textbox ip" type="text" maxLength=3 id="mask-0" value=0 name="mask" oninput="filterInput(this)" onchange="inputChanged(this)">
+                        <input class= "textbox ip" type="text" maxLength=3 id="mask-1" value=0 name="mask" oninput="filterInput(this)" onchange="inputChanged(this)">
+                        <input class= "textbox ip" type="text" maxLength=3 id="mask-2" value=0 name="mask" oninput="filterInput(this)" onchange="inputChanged(this)">
+                        <input class= "textbox ip" type="text" maxLength=3 id="mask-3" value=0 name="mask" oninput="filterInput(this)" onchange="inputChanged(this)">
+                    </div>
+                    <h3>Gateway:</h3>
+                    <div style="display: flex; flex-direction: row; align-items: flex-end; justify-content: space-between; ">
+                        <input class= "textbox ip" type="text" maxLength=3 id="gw-0" value=0 name="gw" oninput="filterInput(this)" onchange="inputChanged(this)">
+                        <input class= "textbox ip" type="text" maxLength=3 id="gw-1" value=0 name="gw" oninput="filterInput(this)" onchange="inputChanged(this)">
+                        <input class= "textbox ip" type="text" maxLength=3 id="gw-2" value=0 name="gw" oninput="filterInput(this)" onchange="inputChanged(this)">
+                        <input class= "textbox ip" type="text" maxLength=3 id="gw-3" value=0 name="gw" oninput="filterInput(this)" onchange="inputChanged(this)">
+                    </div>
+                    
+                    <span class="popup"></span>
+                </form>
+            </div>
+            
+            <div class="maindiv">
+                <form class="details-container" id="wifi" action="javascript:;" onsubmit="sendConfig(this)">
+            
+                    <div class="select">
+                        <div class="maindiv-title">
+                            <img src="./img/wifi.svg">
+                            <h2>Wifi</h2>
+                        </div>
+                        <label class="switch" style="margin-right: 10px;">
+                            <input name="enabled" type="hidden" value="0">
+                            <input name="enabled" id="enabled-wifi" type="checkbox" value="1" onclick="checkEnabled(this)" onchange="inputChanged(this)">
+                            <span class="slider"></span>
+                        </label>                     
+                    </div>
+
+                    <h3>Defina a nova rede:</h3>
+                    <div class= "pw-with-eye">
+                        <input name="ssid" class= "textbox" maxLength=30 type="text" id="ssid" placeholder="Nome da rede" oninput="filterInput(this)" onchange="inputChanged(this)" >
+                    </div>
+                    <div class= "pw-with-eye">
+                        <input name="password" class= "textbox" maxLength=30 type="password" id="password-wifi-1" placeholder="Senha" oninput="filterInput(this)" onchange="inputChanged(this)">
+                    </div>
+                    <div class= "pw-with-eye">
+                        <input class= "textbox" maxLength=30 type="password" id="password-wifi-2" placeholder="Repita a senha" oninput="filterInput(this)" onchange="inputChanged(this)">
+                        <div class="eye" id="wifiEye" onmousedown="revealFields(this, true)" onmouseout="revealFields(this, false)" onmouseup="revealFields(this, false)" ontouchstart="revealFields(this, true)" ontouchend="revealFields(this, false)">
+                            <img style="user-select: none" src="./img/eye.svg">
+                        </div>
+                    </div>
+                    
+                    <span class="popup"></span>
+                </form>
+            </div>   
+
+            <div class="maindiv">
+                <div class="maindiv-title"><img src="./img/net.svg"><h2>Servidor</h2></div>
+                
+                <form class="details-container" id="socket" action="javascript:;" onsubmit="sendConfig(this)">
+                    <h3>Endereço IP:</h3>
+                    <div style="display: flex; flex-direction: row; align-items: flex-end; justify-content: space-between; ">
+                        <input class= "textbox ip" type="text" maxLength=3 id="ip-server-0" name="ip" value=0 oninput="filterInput(this)" onchange="inputChanged(this)">
+                        <input class= "textbox ip" type="text" maxLength=3 id="ip-server-1" name="ip" value=0 oninput="filterInput(this)" onchange="inputChanged(this)">
+                        <input class= "textbox ip" type="text" maxLength=3 id="ip-server-2" name="ip" value=0 oninput="filterInput(this)" onchange="inputChanged(this)">
+                        <input class= "textbox ip" type="text" maxLength=3 id="ip-server-3" name="ip" value=0 oninput="filterInput(this)" onchange="inputChanged(this)">
+                    </div>
+
+                    <div class="select">
+                        <h3>Porta:</h3>
+                        <input class="textbox" style="width: 80px;" maxLength=4 type="text" id="port" name="port" placeholder="Porta" 
+                        oninput="filterInput(this)" onchange="inputChanged(this)">             
+                    </div>
+                    
+                    <span class="popup"></span>
+                </form>
+            </div>
+            
+            <div class="save-config-padding"></div>
+            
+        </div>
+        
+        <div id="ferramentas" class="configdiv">
+
+            <div class="maindiv">
+                <div class="maindiv-title"><img src="./img/upload.svg"><h2>Atualizar Firmware</h2></div>
+                <div class="details-container" id="fw-update"> 
+                    <div class="file-input-container"> 
+                        <span class="file-latest">Último Firmware: - </span>
+                        <div class="file-drop-area">
+                            <img src="img/file.svg">
+                            <span class="file-msg">Escolha um arquivo de firmware ou o solte aqui</span>
+                            <input class="file-input" type="file" accept=".bin" onchange="loadFile(this)">
+                        </div>
+                        <button class="button" onclick="updateFirmware(this)">Atualizar</button>
+                        <span class="file-status"></span>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="maindiv">
+                <div class="maindiv-title"><img src="./img/ul-config.svg"><h2>Atualizar Configuração</h2></div>
+                <div class="details-container"> 
+                    <div class="file-input-container" id="config-update"> 
+                        <span class="file-latest">Última Configuração: - </span>
+                        <div class="file-drop-area">
+                            <img src="img/file.svg">
+                            <span class="file-msg">Escolha um arquivo de configuração ou o solte aqui</span>
+                            <input class="file-input" type="file" accept=".json" onchange="loadFile(this)">
+                        </div>
+                        <button class="button" onclick="updateConfig(this)">Atualizar</button>
+                        <span class="file-status"></span>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="maindiv">
+                <div class="maindiv-title"><img src="./img/dw-config.svg"><h2>Backup de Configuração</h2></div>
+                <div class="details-container buttons-container"> 
+                    <div>
+                        <h3>Configuração Atual</h3> 
+                        <a id="config-backup" class="button" href=""><img src="img/download.svg"></a>
+                    </div>
+                    <div>
+                        <h3>Configuração Anterior</h3> 
+                        <a id="recover-config" class="button" onclick="prevConfigBackup(this)"><img src="img/undo.svg"></a>
+                    </div>
+                    <div>
+                        <h3>Configuração de Fábrica</h3> 
+                        <a id="factory-config" class="button" onclick="factoryConfigBackup(this)"><img src="img/dw-factory.svg"></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="maindiv  hidden">
+                <div class="maindiv-title"><img src="./img/screen.svg"><h2>Atualizar Interface HTML</h2></div>
+                <div class="details-container"> 
+                    <div class="file-input-container" id="interface-update"> 
+                        <div class="file-drop-area">
+                            <img src="img/file.svg">
+                            <span class="file-msg">Escolha a uma pasta com os arquivos da interface</span>
+                            <input class="file-input" type="file" onchange="loadFolder(this)" webkitdirectory mozdirectory>
+                        </div>
+                        <button class="button" onclick="updateInterface(this)">Atualizar</button>
+                        <span class="file-status"></span>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="maindiv">
+                <div class="maindiv-title"><img src="./img/warning.svg"><h2>Funcões Avançadas</h2></div>
+                <div class="details-container buttons-container"> 
+                    <div>
+                        <h3>Reiniciar Dispositivo</h3> 
+                        <a id="device-reset" style="background: rgb(255, 196, 0);" class="button" onclick="resetDevice(false)"><img src="img/shutdown.svg"></a>
+                    </div>
+                    <div>
+                        <h3>Reset de Fábrica</h3> 
+                        <a id="factory-reset" style="background: red;" class="button" onclick="resetDevice(true)"><img src="img/factory.svg"></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="save-config-padding"></div>
+        </div>
+        
+    </div>
+</body>
+
+<script src="js/config.js"></script>
+<script>
+  
+
+  
+
+</script>

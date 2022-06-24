@@ -1,0 +1,123 @@
+<!DOCTYPE html><html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./style/index.css">
+    <link rel="icon" href="./img/logo.svg">
+    
+    <title>ATI</title>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <div class="header">
+        <a class="btn btn-sidebar" href="/"><img src="./img/home.svg"></a>
+        <a class="btn btn-config" href="/config"><img src="./img/gear.svg"></a>
+        <a class="btn" href="https://ati.com.br/"><img src="./img/logo.svg" width="135" height="48"></a>
+    </div> 
+
+    <div>
+        <div class= "layout-row-main" style="top: 60px; padding: 10px;">
+            <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                <h3 style="width: 25%; text-align: left; margin: 15px;">Log pannel</h3>
+                <div  style="display: flex; flex-direction: row; justify-content: right; align-items: center;">
+                    <h3 id="status" style="width: fit-content; text-align: left; margin: 15px; color: grey">disconnected</h3>
+                    <div id="led" style="margin: 15px; width: 10px; height: 10px; border-radius: 100%; background: grey;"></div>
+                </div>
+            </div>
+            <div id="log-pannel" style="margin: 10px; padding: 10px; font-size: 16px; border-radius: 20px; background: #282c34; height: 75vh; overflow-y: scroll; font-family: 'Courier New', Courier, monospace; color:white; text-align: left;">
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+
+    var ws = WebSocketTest(location.host)
+
+    var msgCount = 0
+
+    function WebSocketTest(ip) {
+        
+        if ("WebSocket" in window) {
+            
+            // Let us open a web socket
+            var ws = new WebSocket("ws://"+ ip + "/ws");
+
+            ws.onopen = function() {
+                ws.send('');  
+                setInterval(function() {
+                    console.log(ws.readyState)
+                    if (ws.readyState == ws.OPEN) {  
+                        ws.send('');  
+                    }             
+                }, 10000); 
+            };
+            
+            ws.onmessage = function (evt) { 
+                var received_msg = evt.data;
+
+                var justText = received_msg.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
+                var escape = received_msg.slice(4,6);
+
+                var color = "#cccccc"
+                if(escape == "32"){
+                    color = "#02d894"
+                }else if(escape == "31"){
+                    color = "#e0797a"
+                }else if(escape == "33"){
+                    color = "#d8e23a"
+                }
+
+                if (color != "white"){
+                    var log = document.getElementById("log-pannel");
+                    log.innerHTML += '<p style="color: ' + color + '; margin-block: 5px">' + justText + '</p>\n';
+                    log.scrollTop = log.scrollHeight;
+                }
+
+
+                var status = document.getElementById("status");
+                status.innerHTML = "connecting...";
+                status.style.color = "gold";
+                var led = document.getElementById("led");
+                led.style.background = "gold";
+
+                msgCount++;
+                if (msgCount > 5){
+                    status.innerHTML = "connected";
+                    status.style.color = "#02d894";
+                    led.style.background = "#02d894";
+                }
+            };
+            
+            ws.onclose = function() { 
+                console.log("Connection is closed... ");
+
+                msgCount = 0;
+
+                var status = document.getElementById("status");
+                status.innerHTML = "disconnected";
+                status.style.color = "grey";
+
+                var led = document.getElementById("led");
+                led.style.background = "grey";
+
+                // Lets try to reconnect every 5 seconds
+                setTimeout(function () {
+                    if(ws.readyState == WebSocket.CLOSED){
+                        ws = WebSocketTest(ip);
+                    }
+                }, 200);
+                // websocket is closed.
+            };
+
+        } else {
+            
+            // The browser doesn't support WebSocket
+            alert("WebSocket NOT supported by your Browser!");
+        }
+
+        return ws
+    }
+
+
+</script>

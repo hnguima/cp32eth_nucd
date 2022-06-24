@@ -1,0 +1,37 @@
+{
+	"info": {
+		"description": "Dispositivo: CP32ETH da NUCD",
+		"fw_version": "1.0",
+		"hw_version": "0.0.1",
+		"resets": 0,
+		"config_updates": 0,
+		"if_updates": 0,
+		"fw_updates": 0,
+		"up_time": 0,
+		"init_time": 0,
+		"install_time": 0,
+		"available_mem": 0
+	},
+	"login":{
+		"username": "admin",
+		"password": "ati12345"
+	},
+	"admin": {
+		"username": "root",
+		"password": "ati253089"
+	},
+	"ip": {
+		"ip": -234706752,
+		"mask": 16777215,
+		"gw": -33380160
+	},
+	"wifi": {
+		"enabled": 1,
+		"ssid": "CP32ETH",
+		"password": "ati12345"
+	},
+	"socket": {
+		"ip": 906143936,
+		"port": 8080
+	}
+}
