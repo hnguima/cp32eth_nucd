@@ -44,16 +44,7 @@
  * Biblioteca da aplicação 
  */
 #include "system.h"
-
-typedef struct
-{
-
-    uint8_t enabled;
-
-    char* ssid;
-    char* password;
-
-} wifi_data_t;
+#include "config.h"
 
 void wifi_ap_init(wifi_data_t *config);
 // void wifi_ap_init(void);

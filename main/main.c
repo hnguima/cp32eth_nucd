@@ -61,8 +61,8 @@ void app_main(void)
 	SYSTEM_ERROR_CHECK(uart_init(cp32eth), err, TAG, "Erro ao inicializar a porta uart");
 
 	// Inicializa ethernet
-	ethernet_init(cp32eth->ip);
-	
+	SYSTEM_RETRY(ethernet_init(cp32eth->ip), err, TAG, 500, 10);
+
 	// Inicializa server http
 	httpd_handle_t server = http_server_init(cp32eth);
 

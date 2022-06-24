@@ -9,8 +9,8 @@
  */
 #define PIN_SMI_MDC 23 // Pinos da interface RMII
 #define PIN_SMI_MDIO 18
-#define PHY_ADDR -1      // Endereço configurado via hardware
-#define PIN_PHY_RESET -1 //-1 = pino de reset do PHY não esta conectado ao ESP32
+#define PHY_ADDR 0       // Endereço configurado via hardware
+#define PIN_PHY_RESET 33 //-1 = pino de reset do PHY não esta conectado ao ESP32
 
 /**
  * Protótipos:
@@ -23,7 +23,7 @@
  * Variáveis Globais;
  */
 static const char *TAG = "eth";
-// 
+//
 /**
  * Função de Callback de notificação dos status da comunicação Ethernet;
  */
@@ -89,16 +89,15 @@ static void got_ip_event_handler(void *arg, esp_event_base_t event_base,
                   "\nETHGW:   %03d.%03d.%03d.%03d"
                   "\n~~~~~~~~~~~~~~~~~~~~~~~~",
              IP2STR(&ip_info->ip), IP2STR(&ip_info->netmask), IP2STR(&ip_info->gw));
-
-    
 }
 
-void ethernet_init(ip_data_t *config)
+esp_err_t ethernet_init(ip_data_t *config)
 {
+    esp_err_t err = ESP_OK;
     /*
      * Inicializa o stack TCP;
      */
-    ESP_ERROR_CHECK(esp_netif_init());
+    SYSTEM_ERROR_CHECK(esp_netif_init(), err, TAG, "esp_netif_init error");
 
     /*
      * Registra a função de callback do stack TCP;
@@ -107,8 +106,13 @@ void ethernet_init(ip_data_t *config)
 
     esp_netif_config_t cfg = ESP_NETIF_DEFAULT_ETH();
     esp_netif_t *eth_netif = esp_netif_new(&cfg);
+    if (eth_netif == NULL)
+    {
+        ESP_LOGE(TAG, "Failed to create Ethernet netif!");
+        goto err;
+    }
     // Set default handlers to process TCP/IP stuffs
-    ESP_ERROR_CHECK(esp_eth_set_default_handlers(eth_netif));
+    SYSTEM_ERROR_CHECK(esp_eth_set_default_handlers(eth_netif), err, TAG, "esp_eth_set_default_handlers error");
 
     // IP fixo ou DHCP?
     uint8_t dhcp_temp = 0; // Força o produto a sempre utilizar ip fixo.
@@ -116,11 +120,11 @@ void ethernet_init(ip_data_t *config)
 
     if (dhcp_temp > 0)
     {
-        ESP_ERROR_CHECK(esp_netif_dhcpc_start(eth_netif));
+        SYSTEM_ERROR_CHECK(esp_netif_dhcpc_start(eth_netif), err, TAG, "esp_netif_dhcpc_start error");
     }
     else
     {
-        ESP_ERROR_CHECK(esp_netif_dhcpc_stop(eth_netif));
+        SYSTEM_ERROR_CHECK(esp_netif_dhcpc_stop(eth_netif), err, TAG, "esp_netif_dhcpc_stop error");
         esp_netif_ip_info_t ip_info;
 
         ip_info.ip.addr = config->ip;
@@ -132,22 +136,32 @@ void ethernet_init(ip_data_t *config)
 
     // Registra os eventos ocorridos durante o processo de conexão
     // Em IP_EVENT somente GOT_IP é interessante quando utilizando só a conexãoethernet
-    ESP_ERROR_CHECK(esp_event_handler_register(ETH_EVENT, ESP_EVENT_ANY_ID, &eth_event_handler, NULL));
-    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_ETH_GOT_IP, &got_ip_event_handler, NULL));
+    SYSTEM_ERROR_CHECK(esp_event_handler_register(ETH_EVENT, ESP_EVENT_ANY_ID, &eth_event_handler, NULL), err, TAG, "esp_event_handler_register error");
+    SYSTEM_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_ETH_GOT_IP, &got_ip_event_handler, NULL), err, TAG, "esp_event_handler_register error");
 
     /*
      * Configura o descritor ethernet do ESP32;
      */
     eth_phy_config_t phy_config = ETH_PHY_DEFAULT_CONFIG();
-    phy_config.phy_addr = PHY_ADDR;            // Endereço do PHY
-    phy_config.reset_gpio_num = PIN_PHY_RESET; // Reset não conectado ao ESP
+    phy_config.phy_addr = PHY_ADDR;
+    phy_config.reset_gpio_num = PIN_PHY_RESET;
 
     eth_mac_config_t mac_config = ETH_MAC_DEFAULT_CONFIG();
-    mac_config.smi_mdc_gpio_num = PIN_SMI_MDC;   // GPIO23
-    mac_config.smi_mdio_gpio_num = PIN_SMI_MDIO; // GPIO18
+    mac_config.smi_mdc_gpio_num = PIN_SMI_MDC;
+    mac_config.smi_mdio_gpio_num = PIN_SMI_MDIO;
 
     esp_eth_mac_t *mac = esp_eth_mac_new_esp32(&mac_config);
+    if (mac == NULL)
+    {
+        ESP_LOGE(TAG, "Failed to create MAC");
+        goto err;
+    }
     esp_eth_phy_t *phy = esp_eth_phy_new_lan8720(&phy_config);
+    if (phy == NULL)
+    {
+        ESP_LOGE(TAG, "Failed to init PHY");
+        goto err;
+    }
 
     /*
      *   Inicializa ethernet
@@ -155,9 +169,27 @@ void ethernet_init(ip_data_t *config)
     esp_eth_config_t eth_config = ETH_DEFAULT_CONFIG(mac, phy);
 
     esp_eth_handle_t eth_handle = NULL;
-    ESP_ERROR_CHECK(esp_eth_driver_install(&eth_config, &eth_handle));
+    SYSTEM_ERROR_CHECK(esp_eth_driver_install(&eth_config, &eth_handle), err, TAG, "esp_eth_driver_install error");
     /* attach Ethernet driver to TCP/IP stack */
-    ESP_ERROR_CHECK(esp_netif_attach(eth_netif, esp_eth_new_netif_glue(eth_handle)));
+    SYSTEM_ERROR_CHECK(esp_netif_attach(eth_netif, esp_eth_new_netif_glue(eth_handle)), err, TAG, "esp_netif_attach error");
     /* start Ethernet driver state machine */
-    ESP_ERROR_CHECK(esp_eth_start(eth_handle));
+    SYSTEM_ERROR_CHECK(esp_eth_start(eth_handle), err, TAG, "esp_eth_start error");
+
+    return ESP_OK;
+
+err:
+    // deinit ethernet
+    esp_eth_driver_uninstall(eth_handle);
+    if (mac != NULL)
+    {
+        mac->del(mac);
+    }
+    if (phy != NULL)
+    {
+        phy->del(phy);
+    }
+    esp_netif_destroy(eth_netif);
+    esp_netif_deinit();
+
+    return err;
 }

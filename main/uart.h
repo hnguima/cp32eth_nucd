@@ -9,7 +9,7 @@
 #include "esp_err.h"
 #include "soc/uart_reg.h"
 
-#include "esp_netif_ip_addr.h"
+#include "esp_netif.h"
 
 #include "system.h"
 #include "config.h"

@@ -17,15 +17,9 @@
 
 #include "socket_tcp.h"
 #include "uart.h"
+#include "config.h"
 
 socket_ctx_t client_tcp;
-
-typedef struct
-{
-    uint32_t ip;
-    uint32_t port;
-
-} client_tcp_data_t;
 
 esp_err_t client_tcp_init(client_tcp_data_t *config);
 

@@ -42,18 +42,13 @@
 #include "driver/gpio.h"
 #include "driver/periph_ctrl.h"
 
+#include "system.h"
+#include "config.h"
+
 #define CONNECTED_BIT BIT0
 #define REBOOT_BIT BIT1
 
-typedef struct
-{
-    int32_t ip;
-    int32_t mask;
-    int32_t gateway;
-
-} ip_data_t;
-
-void ethernet_init(ip_data_t *config);
+esp_err_t ethernet_init(ip_data_t *config);
 // void ethernet_init(void);
 
 #endif //<-- __ETHERNET___H -->

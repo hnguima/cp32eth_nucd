@@ -27,9 +27,6 @@
  * User Libs
  */
 #include "filesystem.h"
-#include "ethernet.h"
-#include "wifi_ap.h"
-#include "client_tcp.h"
 // #include "http_server.h"
 
 
@@ -68,6 +65,30 @@ typedef struct
 
 } login_data_t;
 
+typedef struct
+{
+    int32_t ip;
+    int32_t mask;
+    int32_t gateway;
+
+} ip_data_t;
+
+typedef struct
+{
+
+    uint8_t enabled;
+
+    char *ssid;
+    char *password;
+
+} wifi_data_t;
+
+typedef struct
+{
+    int32_t ip;
+    uint32_t port;
+
+} client_tcp_data_t;
 typedef struct
 {
 

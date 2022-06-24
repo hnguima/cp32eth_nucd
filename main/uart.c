@@ -60,7 +60,11 @@ static void uart_event_task(void *param)
                         host_port = *(uint16_t *)&config_str[80];
                         data->socket->port = host_port;
 
+                        printf("ip: %s, mask: %s, gw: %s, host_ip: %s, host_port: %d\n", ip_str, mask_str, gw_str, host_ip, host_port);
+                        printf("ip: %d, mask: %d, gw: %d, host_ip: %d, host_port: %d\n", data->ip->ip, data->ip->mask, data->ip->gateway, data->socket->ip, data->socket->port);
+
                         config_save(data);
+                        system_reboot(2);
                     }
                     else if (dtmp[17] == 'R')
                     {
