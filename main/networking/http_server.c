@@ -63,7 +63,7 @@ esp_err_t OTA_status_handler(httpd_req_t *req)
     {
         // O sistema não pode ser reiniciado diretamente
         // Pois a interface precisa receber a resposta desta solicitação
-        system_reboot(2);
+        system_reboot(2000);
     }
 
     return ESP_OK;
@@ -450,7 +450,7 @@ static esp_err_t config_handler(httpd_req_t *req)
     if (strstr(restart, "true") != NULL)
     {
         config_save(cp32eth);
-        system_reboot(5);
+        system_reboot(2000);
     }
 
     httpd_resp_set_status(req, HTTPD_200);
@@ -525,7 +525,7 @@ static esp_err_t reset_handler(httpd_req_t *req)
         // fs_revert_to_default(access);
     }
 
-    system_reboot(5);
+    system_reboot(2000);
 
     return ESP_OK;
 }

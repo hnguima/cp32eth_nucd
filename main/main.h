@@ -66,6 +66,8 @@
 #define PHY_ENABLE 33
 #define GPIO_OUTPUT_PIN_SEL ((1ULL << PHY_ENABLE))
 
+#define MAX_QUEUE_LENGTH 1024
+
 #define DEBUG_MEMORY
 
 #endif //<-- __MAIN__H -->

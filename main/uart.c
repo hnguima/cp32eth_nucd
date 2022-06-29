@@ -27,7 +27,7 @@ static void uart_event_task(void *param)
                 uart_read_bytes(UART_NUM, dtmp, event.size, portMAX_DELAY);
 
                 ESP_LOG_BUFFER_HEXDUMP(TAG, dtmp, event.size, ESP_LOG_INFO);
-                
+
                 if (strstr((char *)dtmp, "ABCDEFGHIJKLMNOPQ") != NULL)
                 {
                     if (dtmp[17] == 'r')
@@ -64,7 +64,7 @@ static void uart_event_task(void *param)
                         printf("ip: %d, mask: %d, gw: %d, host_ip: %d, host_port: %d\n", data->ip->ip, data->ip->mask, data->ip->gateway, data->socket->ip, data->socket->port);
 
                         config_save(data);
-                        system_reboot(2);
+                        system_reboot(6000);
                     }
                     else if (dtmp[17] == 'R')
                     {
@@ -73,6 +73,14 @@ static void uart_event_task(void *param)
                         ESP_LOGI(TAG, "Recebeu comando de obter dados de operacao");
                     }
                 } // ABCDEFGHIJKLMNOPQR
+                else
+                {
+                    // envia para a fila
+                    if (xQueueSend(data->tcp_queue, dtmp, (TickType_t)portMAX_DELAY) != pdTRUE)
+                    {
+                        ESP_LOGE(TAG, "Fila de dados cheia");
+                    }
+                }
                 // if (dtmp[0] == '\b')
                 // {
                 //     ESP_LOGI(TAG, "caiu aqui");

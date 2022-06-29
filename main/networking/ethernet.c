@@ -180,10 +180,10 @@ esp_err_t ethernet_init(ip_data_t *config)
 err:
     // deinit ethernet
     esp_eth_driver_uninstall(eth_handle);
-    if (mac != NULL)
-    {
-        mac->del(mac);
-    }
+    // if (mac != NULL)
+    // {
+    //     mac->del(mac);
+    // }
     if (phy != NULL)
     {
         phy->del(phy);

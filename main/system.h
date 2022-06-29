@@ -44,6 +44,6 @@ esp_err_t __err_code__;
         vTaskDelay(interval / portTICK_PERIOD_MS);                                              \
     }
 
-void system_reboot(uint8_t timeSeconds);
+void system_reboot(uint16_t time_ms);
 
 #endif /* __SYSTEM___H */

@@ -50,9 +50,21 @@ void app_main(void)
 	// Carrega as configurações da flash
 	cp32eth = calloc(1, sizeof(cp32eth_data_t));
 	SYSTEM_ERROR_CHECK(config_load(cp32eth), err, TAG, "Erro ao carregar o filesystem");
-
+	
 	// Atualiza o numero de resets
 	cp32eth->info->resets++;
+
+	// Inicializa tcp e uart queues
+	cp32eth->tcp_queue = xQueueCreate(MAX_QUEUE_LENGTH, sizeof(char));
+	if (cp32eth->tcp_queue == 0)
+	{
+		ESP_LOGE(TAG, "Erro ao criar a fila de tcp");
+	}
+	cp32eth->uart_queue = xQueueCreate(MAX_QUEUE_LENGTH, sizeof(char));
+	if (cp32eth->uart_queue == 0)
+	{
+		ESP_LOGE(TAG, "Erro ao criar a fila de uart");
+	}
 
 	// Checa se a configuração é de fabrica
 	// todo acionar o led de stt caso a config seja de fabrica

@@ -100,6 +100,9 @@ typedef struct
     wifi_data_t *wifi;
     client_tcp_data_t *socket;
 
+    QueueHandle_t tcp_queue;
+    QueueHandle_t uart_queue;
+
 } cp32eth_data_t;
 
 typedef enum

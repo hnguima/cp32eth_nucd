@@ -18,15 +18,15 @@ void system_reboot_task(void *param)
 
 /*
  *	Reinicia a aplicação.
- *  Tempo minimo 2 segundos.
+ *  Tempo minimo 500 ms.
  */
-void system_reboot(uint8_t time)
+void system_reboot(uint16_t time_ms)
 {
-	reboot_time = time * 1000;
+	reboot_time = time_ms;
 
-	if (reboot_time < 2000)
+	if (reboot_time < 500)
 	{
-		reboot_time = 2000;
+		reboot_time = 500;
 	}
 
 	xTaskCreate(system_reboot_task, "system_reboot_task", 2048, NULL, 2, NULL);
