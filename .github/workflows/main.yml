@@ -24,6 +24,6 @@ jobs:
       
         uses: espressif/esp-idf-ci-action@v1
         with: 
-          command: ${{ github.workspace }}/esp-idf build
+          command: ${{ github.workspace }}/idf.py build
 
 
