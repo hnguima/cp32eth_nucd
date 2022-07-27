@@ -16,12 +16,10 @@ jobs:
         with:
           submodules: 'recursive'
           
-      - name: list files
-        run: |
-          ls ${{ github.workspace }}
+      - name: go to folder  
+        run: cd ${{ github.workspace }} && ls
 
       - name: esp-idf build
-      
         uses: espressif/esp-idf-ci-action@v1
         with: 
           command: ${{ github.workspace }}/idf.py build
