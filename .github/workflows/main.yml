@@ -22,6 +22,6 @@ jobs:
       - name: esp-idf build
         uses: espressif/esp-idf-ci-action@v1
         with: 
-          command: ${{ github.workspace }}/idf.py build
+          command: idf.py build
 
 
