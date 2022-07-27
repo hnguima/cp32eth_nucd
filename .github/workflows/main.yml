@@ -11,7 +11,7 @@ jobs:
 
 
     steps:
-      - name: chevout repo
+      - name: checkout repo
         uses: actions/checkout@v2
         with:
           submodules: 'recursive'
@@ -24,6 +24,6 @@ jobs:
       
         uses: espressif/esp-idf-ci-action@v1
         with: 
-          command: cd ${{ github.workspace }} && ls && esp-idf build
+          command: ${{ github.workspace }}/esp-idf build
 
 
