@@ -9,20 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v2
-      with:
-        submodules: 'recursive'
-        
-    - name: List files in the repository
-      run: |
-        ls ${{ github.workspace }}
-    
     - name: esp-idf build
       uses: espressif/esp-idf-ci-action@v1
-      with:
-        esp_idf_version: v4.4
-        target: esp32
-        path: ${{ github.workspace }}
 
 
