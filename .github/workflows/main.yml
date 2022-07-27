@@ -1,0 +1,46 @@
+
+name: GitHub Actions Demo
+
+on: [push]
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          
+      - name: go to folder  
+        run: cd ${{ github.workspace }}
+
+      - name: esp-idf build
+        uses: espressif/esp-idf-ci-action@v1
+        with: 
+          esp_idf_version: v4.4
+          command: idf.py build
+          
+      - run: echo "✅ Project Built Successfully!"
+      
+  test: 
+    name: test
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "Running tests after build job"
+      - run: ls ${{ github.workspace }}
+      
+  test2: 
+    name: test2
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "Running tests2 after build job"
+      - run: ls ${{ github.workspace }}
+      
+
+
