@@ -7,9 +7,21 @@ jobs:
   build:
   
     runs-on: ubuntu-latest
+    
+
 
     steps:
-    - name: esp-idf build
-      uses: espressif/esp-idf-ci-action@v1
+      - name: chevout repo
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          path: 'app'
+          
+      - name: list files
+        run: |
+          ls ${{ github.workspace }}
+
+      - name: esp-idf build
+        uses: espressif/esp-idf-ci-action@v1
 
 
