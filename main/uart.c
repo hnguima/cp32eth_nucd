@@ -16,7 +16,7 @@ static void uart_event_task(void *param)
         if (xQueueReceive(uart_queue, (void *)&event, (TickType_t)portMAX_DELAY))
         {
             bzero(dtmp, RX_BUF_SIZE);
-            ESP_LOGI(TAG, "uart[%d] event: %d", UART_NUM, event.type);
+            // ESP_LOGI(TAG, "uart[%d] event: %d", UART_NUM, event.type);
             switch (event.type)
             {
             // Event of UART receving data
@@ -26,7 +26,7 @@ static void uart_event_task(void *param)
             case UART_DATA:
                 uart_read_bytes(UART_NUM, dtmp, event.size, portMAX_DELAY);
 
-                ESP_LOG_BUFFER_HEXDUMP(TAG, dtmp, event.size, ESP_LOG_INFO);
+                // ESP_LOG_BUFFER_HEXDUMP(TAG, dtmp, event.size, ESP_LOG_INFO);
 
                 if (strstr((char *)dtmp, "ABCDEFGHIJKLMNOPQ") != NULL)
                 {
@@ -75,10 +75,17 @@ static void uart_event_task(void *param)
                 } // ABCDEFGHIJKLMNOPQR
                 else
                 {
-                    // envia para a fila
-                    if (xQueueSend(data->tcp_queue, dtmp, (TickType_t)portMAX_DELAY) != pdTRUE)
+                    queue_data_t *queue_data = (queue_data_t *)malloc(sizeof(queue_data_t));
+
+                    //copy data from dtmp
+                    queue_data->data = (uint8_t *)malloc(event.size);
+                    memcpy(queue_data->data, dtmp, event.size);
+                    queue_data->size = event.size;
+
+                    if (xQueueSend(data->socket->queue, (void *)&queue_data, (TickType_t)portMAX_DELAY) != pdTRUE)
                     {
-                        ESP_LOGE(TAG, "Fila de dados cheia");
+                        ESP_LOGE(TAG, "Failed to send to the queue");
+                        free(queue_data);
                     }
                 }
                 // if (dtmp[0] == '\b')

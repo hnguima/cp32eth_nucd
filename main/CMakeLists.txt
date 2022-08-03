@@ -7,7 +7,6 @@ idf_component_register( SRCS
                             "networking/http_server.c"
                             "networking/wifi_ap.c"
                             "networking/socket_tcp.c"
-                            "networking/ethernet.c"
                             "networking/client_tcp.c"
                             
                             "config/config.c"

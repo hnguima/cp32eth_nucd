@@ -31,7 +31,7 @@
 		"password": "ati12345"
 	},
 	"socket": {
-		"ip": 906143936,
-		"port": 8080
+		"ip": 0,
+		"port": 0
 	}
 }

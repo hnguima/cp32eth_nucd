@@ -88,7 +88,16 @@ typedef struct
     int32_t ip;
     uint32_t port;
 
+    QueueHandle_t queue;
+
 } client_tcp_data_t;
+
+typedef struct
+{
+    uint8_t *data;
+    int16_t size;
+
+} queue_data_t;
 typedef struct
 {
 
@@ -100,7 +109,6 @@ typedef struct
     wifi_data_t *wifi;
     client_tcp_data_t *socket;
 
-    QueueHandle_t tcp_queue;
     QueueHandle_t uart_queue;
 
 } cp32eth_data_t;

@@ -55,12 +55,12 @@ void app_main(void)
 	cp32eth->info->resets++;
 
 	// Inicializa tcp e uart queues
-	cp32eth->tcp_queue = xQueueCreate(MAX_QUEUE_LENGTH, sizeof(char));
-	if (cp32eth->tcp_queue == 0)
+	cp32eth->socket->queue = xQueueCreate(MAX_QUEUE_LENGTH, sizeof(queue_data_t *));
+	if (cp32eth->socket->queue == 0)
 	{
 		ESP_LOGE(TAG, "Erro ao criar a fila de tcp");
 	}
-	cp32eth->uart_queue = xQueueCreate(MAX_QUEUE_LENGTH, sizeof(char));
+	cp32eth->uart_queue = xQueueCreate(MAX_QUEUE_LENGTH, sizeof(queue_data_t *));
 	if (cp32eth->uart_queue == 0)
 	{
 		ESP_LOGE(TAG, "Erro ao criar a fila de uart");
@@ -75,6 +75,14 @@ void app_main(void)
 	// Inicializa ethernet
 	SYSTEM_RETRY(ethernet_init(cp32eth->ip), err, TAG, 500, 10);
 
+	// Inicializa o sntp
+	sntp_setoperatingmode(SNTP_OPMODE_POLL);
+	sntp_setservername(0, "pool.ntp.org");
+	sntp_init();
+
+	setenv("TZ", "BRST+3BRDT+2,M10.3.0,M2.3.0", 1);
+	tzset();
+	
 	// Inicializa server http
 	httpd_handle_t server = http_server_init(cp32eth);
 
