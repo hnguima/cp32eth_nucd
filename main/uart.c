@@ -4,6 +4,8 @@ static const char *TAG = "uart";
 
 static QueueHandle_t uart_queue;
 
+uint8_t test_command[] = {0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x53, 0x00, 0x00, 0x03, 0x9A, 0x0E};
+
 static void uart_event_task(void *param)
 {
     cp32eth_data_t *data = (cp32eth_data_t *)param;
@@ -73,11 +75,14 @@ static void uart_event_task(void *param)
                         ESP_LOGI(TAG, "Recebeu comando de obter dados de operacao");
                     }
                 } // ABCDEFGHIJKLMNOPQR
+                else if (strstr((char *)dtmp, test_command) != NULL)
+                {
+                }
                 else
                 {
                     queue_data_t *queue_data = (queue_data_t *)malloc(sizeof(queue_data_t));
 
-                    //copy data from dtmp
+                    // copy data from dtmp
                     queue_data->data = (uint8_t *)malloc(event.size);
                     memcpy(queue_data->data, dtmp, event.size);
                     queue_data->size = event.size;

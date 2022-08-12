@@ -4,11 +4,6 @@
 
 static const char *TAG = "main";
 
-void time_sync_notification_cb(struct timeval *tv)
-{
-	ESP_LOGI(TAG, "Notification of a time synchronization event");
-}
-
 cp32eth_data_t *cp32eth;
 
 void app_main(void)
@@ -74,14 +69,6 @@ void app_main(void)
 
 	// Inicializa ethernet
 	SYSTEM_RETRY(ethernet_init(cp32eth->ip), err, TAG, 500, 10);
-
-	// Inicializa o sntp
-	sntp_setoperatingmode(SNTP_OPMODE_POLL);
-	sntp_setservername(0, "pool.ntp.org");
-	sntp_init();
-
-	setenv("TZ", "BRST+3BRDT+2,M10.3.0,M2.3.0", 1);
-	tzset();
 	
 	// Inicializa server http
 	httpd_handle_t server = http_server_init(cp32eth);
@@ -93,6 +80,8 @@ void app_main(void)
 
 	// Adiciona a task atual ao watchdog
 	SYSTEM_ERROR_CHECK(esp_task_wdt_add(NULL), err, TAG, "Erro ao adicionar a task atual ao watchdog");
+
+	uint8_t i = 0;
 
 	while (1)
 	{

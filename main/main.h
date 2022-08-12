@@ -64,10 +64,11 @@
 #include "client_tcp.h"
 
 #define PHY_ENABLE 33
-#define GPIO_OUTPUT_PIN_SEL ((1ULL << PHY_ENABLE))
+#define LED_STT 32
+#define GPIO_OUTPUT_PIN_SEL ((1ULL << PHY_ENABLE) | (1ULL << LED_STT))
 
 #define MAX_QUEUE_LENGTH 128
 
-#define DEBUG_MEMORY
+// #define DEBUG_MEMORY
 
 #endif //<-- __MAIN__H -->
