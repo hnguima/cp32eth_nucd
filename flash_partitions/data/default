@@ -3,6 +3,7 @@
 		"description": "Dispositivo: CP32ETH da NUCD",
 		"fw_version": "1.0",
 		"hw_version": "0.0.1",
+		"mac_addr": "00:00:00:00:00:00",
 		"resets": 0,
 		"config_updates": 0,
 		"if_updates": 0,

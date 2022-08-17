@@ -48,6 +48,9 @@ void app_main(void)
 	
 	// Atualiza o numero de resets
 	cp32eth->info->resets++;
+	uint8_t mac[6];
+	esp_efuse_mac_get_default(mac);
+	sprintf(cp32eth->info->mac_addr, "%02x:%02x:%02x:%02x:%02x:%02x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 
 	// Inicializa tcp e uart queues
 	cp32eth->socket->queue = xQueueCreate(MAX_QUEUE_LENGTH, sizeof(queue_data_t *));
@@ -81,7 +84,6 @@ void app_main(void)
 	// Adiciona a task atual ao watchdog
 	SYSTEM_ERROR_CHECK(esp_task_wdt_add(NULL), err, TAG, "Erro ao adicionar a task atual ao watchdog");
 
-	uint8_t i = 0;
 
 	while (1)
 	{
@@ -89,8 +91,6 @@ void app_main(void)
 #ifdef DEBUG_MEMORY
 		ESP_LOGI(TAG, "mem : %d", heap_caps_get_free_size(MALLOC_CAP_DEFAULT));
 #endif
-
-		// printf("esp timer: %lld\n", esp_timer_get_time() / 1000);
 
 		// Alimenta os watchdogs
 		SYSTEM_ERROR_CHECK(esp_task_wdt_reset(), err, TAG, "Erro ao alimentar o watchdog da task");

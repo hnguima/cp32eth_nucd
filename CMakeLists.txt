@@ -26,14 +26,12 @@ include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
 project(cp32eth_nucd)
 
-# add_custom_command(
-#     TARGET ${COMPONENT_LIB}
-#     PRE_BUILD
-#     COMMAND execute_process(
-#         COMMAND bash -c "source ./script/compress_server.sh"
-#         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-#     )
-# )
+add_custom_command(
+    PRE_BUILD 
+    COMMAND bash -c "source ./script/compress_server.sh"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    TARGET app
+)
 
 #Salva os arquivos na flash interna do ESP32
 spiffs_create_partition_image(storage0 "flash_partitions/server" FLASH_IN_PROJECT)

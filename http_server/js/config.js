@@ -8,6 +8,42 @@ document.querySelectorAll(`input[name^="enabled"]`).forEach( element => {
     checkEnabled(element)
 })
 
+var embedded_config;
+
+// var embedded_config = JSON.parse('{\
+//     "info": {\
+//         "description": "Dispositivo: CP32ETH da NUCD",\
+//         "fw_version": "0.0.1",\
+//         "hw_version": "1.0",\
+//         "resets": 1,\
+//         "config_updates": 0,\
+//         "if_updates": 0,\
+//         "fw_updates": 0,\
+//         "up_time": 0,\
+//         "init_time": 0,\
+//         "install_time": 0,\
+//         "available_mem": 0\
+//     },\
+//     "login": {\
+//         "username": "admin",\
+//         "password": "ati12345"\
+//     },\
+//     "ip": {\
+//         "ip": 167880896,\
+//         "mask": 16777215,\
+//         "gw": -33445696\
+//     },\
+//     "wifi": {\
+//         "enabled": 1,\
+//         "ssid": "CP32ETH",\
+//         "password": "ati12345"\
+//     },\
+//     "socket": {\
+//         "ip": 0,\
+//         "port": 0\
+//     }\
+// }');
+
 loadConfig()
 
 getstatus(document.getElementById("config-update").querySelector(".file-drop-area"))
@@ -147,8 +183,6 @@ function sidebarChangeTab(tab){
     
 }
 
-var embedded_config;
-
 async function loadConfig(){
     
     const response = await fetch("load_config", {
@@ -165,20 +199,12 @@ async function loadConfig(){
         
         if (container){
 
-            container.querySelectorAll("input, select, textarea").forEach(input => {
+            container.querySelectorAll("input, select, textarea, span").forEach(input => {
 
-                // console.log(input.id + " " + embedded_config[object][input.id])
-
-                if((value = embedded_config[object][input.id]) != undefined){
-                    if(input.type == "checkbox"){
-                        input.checked = value
-                        checkEnabled(input)
-                    }
-                    else {
-                        input.value = value;
-                    }
-                }
-                else if(value = embedded_config[object][input.id.split("-")[0]]){
+                
+                if ((value = embedded_config[object][input.id]) != undefined ||
+                (value = embedded_config[object][input.id.split("-")[0]]) != undefined) {
+                    console.log(input.tagName + " " + value)
                     if(input.id.includes("ip-") || input.id.includes("mask-") || input.id.includes("gw-")){
                         input.value = value >> (input.id[input.id.length - 1] * 8) & 0xff
                     }
@@ -186,8 +212,11 @@ async function loadConfig(){
                         input.checked = value
                         checkEnabled(input)
                     }
-                    else{
-                        input.value = value
+                    else if (input.tagName == "SPAN") { 
+                        input.innerHTML += value
+                    }
+                    else {
+                        input.value = value;
                     }
                 }
             });
@@ -405,12 +434,16 @@ async function saveConfig(button){
 function changeInfoConfig(button){
     
     textarea = button.closest(".details-container").querySelector("textarea")
+    edit_btn = button.closest(".details-container").querySelector("#edit-info")
+    save_btn = button.closest(".details-container").querySelector("#save-info")
     
-    if(textarea.disabled){
-        button.value = "Salvar";
+    if (textarea.disabled) {
+        save_btn.style.display = "block"
+        edit_btn.style.display = "none"
         textarea.disabled = false;
-    }else{
-        button.value = "Alterar";
+    } else {
+        save_btn.style.display = "none"
+        edit_btn.style.display = "block"
         sendConfig(button.closest("form"))
         textarea.disabled = true;
     }

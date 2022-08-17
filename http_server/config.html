@@ -40,9 +40,15 @@
                     <img src="./img/info.svg"><h2>Info</h2>
                 </div>
                 <form class="details-container" id="info" action="javascript:;" onsubmit="sendConfig(this)">
-                    <textarea name="description" class= "textbox" type="text" id="description" placeholder="Descrição" oninput="filterInput(this)" onchange="inputChanged(this)"></textarea>
-                    <span class="popup"></span>
-                    <input class="button" type="button" value="Alterar" onclick="changeInfoConfig(this)">
+                    <div style="width: 100%">
+                        <textarea name="description" class= "textbox" type="text" id="description" placeholder="Descrição" oninput="filterInput(this)" onchange="inputChanged(this)"></textarea>
+                        <a class="btn" style="position: absolute; top: 7px; right: 25px" onclick="changeInfoConfig(this)">
+                            <img id="edit-info" src="./img/pencil.svg">
+                            <img id="save-info" style="display: none" src="./img/check.svg">
+                        </a>
+                    </div>
+                    <span id="fw_version" style="text-align: left; width: 100%; padding-left: 15px; padding-block: 5px;">Firmware: </span>
+                    <span id="mac_addr" style="text-align: left; width: 100%; padding-left: 15px;">MAC: </span>
                 </form>
             </div>
             
@@ -117,7 +123,7 @@
                 </form>
             </div>
             
-            <div class="maindiv">
+            <!-- <div class="maindiv">
                 <form class="details-container" id="wifi" action="javascript:;" onsubmit="sendConfig(this)">
             
                     <div class="select">
@@ -148,10 +154,10 @@
                     
                     <span class="popup"></span>
                 </form>
-            </div>   
+            </div>    -->
 
             <div class="maindiv">
-                <div class="maindiv-title"><img src="./img/net.svg"><h2>Servidor</h2></div>
+                <div class="maindiv-title"><img src="./img/web.svg"><h2>Servidor</h2></div>
                 
                 <form class="details-container" id="socket" action="javascript:;" onsubmit="sendConfig(this)">
                     <h3>Endereço IP:</h3>

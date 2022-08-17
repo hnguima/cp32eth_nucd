@@ -44,7 +44,9 @@ typedef struct
     char *description;
     char *hw_version;
     char *fw_version;
+    char *mac_addr;
 
+    
     uint16_t resets;
     uint16_t config_updates;
     uint16_t if_updates;

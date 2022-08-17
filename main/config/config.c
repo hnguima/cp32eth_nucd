@@ -1,6 +1,5 @@
 #include "config.h"
 
-
 static const char *TAG = "config";
 
 static void config_save_task(void *param);
@@ -140,6 +139,10 @@ esp_err_t config_load_json(cp32eth_data_t *cp32eth, cJSON *config_json)
         cp32eth->info->fw_version = calloc(strlen(aux_str) + 1, sizeof(char));
         strcpy(cp32eth->info->fw_version, aux_str);
 
+        aux_str = JSON_GET_VALUE(info_json, "mac_addr", JSON_TYPE_STRING);
+        cp32eth->info->mac_addr = calloc(strlen(aux_str) + 1, sizeof(char));
+        strcpy(cp32eth->info->mac_addr, aux_str);
+
         cp32eth->info->resets = JSON_GET_VALUE(info_json, "resets", JSON_TYPE_INT);
         cp32eth->info->config_updates = JSON_GET_VALUE(info_json, "config_updates", JSON_TYPE_INT);
         cp32eth->info->if_updates = JSON_GET_VALUE(info_json, "if_updates", JSON_TYPE_INT);
@@ -243,7 +246,7 @@ esp_err_t config_load_json(cp32eth_data_t *cp32eth, cJSON *config_json)
     // Load socket data
     if (!cp32eth->socket)
         cp32eth->socket = malloc(sizeof(client_tcp_data_t));
-    
+
     cJSON *socket_json = cJSON_GetObjectItem(config_json, "socket");
     if (socket_json)
     {
@@ -271,6 +274,7 @@ cJSON *config_parse(cp32eth_data_t *cp32eth, config_parse_e option)
         cJSON_AddStringToObject(info, "description", cp32eth->info->description);
         cJSON_AddStringToObject(info, "fw_version", cp32eth->info->fw_version);
         cJSON_AddStringToObject(info, "hw_version", cp32eth->info->hw_version);
+        cJSON_AddStringToObject(info, "mac_addr", cp32eth->info->mac_addr);
         cJSON_AddNumberToObject(info, "resets", cp32eth->info->resets);
         cJSON_AddNumberToObject(info, "config_updates", cp32eth->info->config_updates);
         cJSON_AddNumberToObject(info, "if_updates", cp32eth->info->if_updates);
