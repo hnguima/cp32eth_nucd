@@ -132,12 +132,12 @@ esp_err_t config_load_json(cp32eth_data_t *cp32eth, cJSON *config_json)
         strcpy(cp32eth->info->description, aux_str);
 
         aux_str = JSON_GET_VALUE(info_json, "fw_version", JSON_TYPE_STRING);
-        cp32eth->info->hw_version = calloc(strlen(aux_str) + 1, sizeof(char));
-        strcpy(cp32eth->info->hw_version, aux_str);
-
-        aux_str = JSON_GET_VALUE(info_json, "hw_version", JSON_TYPE_STRING);
         cp32eth->info->fw_version = calloc(strlen(aux_str) + 1, sizeof(char));
         strcpy(cp32eth->info->fw_version, aux_str);
+
+        aux_str = JSON_GET_VALUE(info_json, "hw_version", JSON_TYPE_STRING);
+        cp32eth->info->hw_version = calloc(strlen(aux_str) + 1, sizeof(char));
+        strcpy(cp32eth->info->hw_version, aux_str);
 
         aux_str = JSON_GET_VALUE(info_json, "mac_addr", JSON_TYPE_STRING);
         cp32eth->info->mac_addr = calloc(strlen(aux_str) + 1, sizeof(char));

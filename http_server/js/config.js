@@ -263,13 +263,13 @@ function filterInput(input){
 
             if(input.parentElement.parentElement.getAttribute("disabled") != "true"){
 
-                if(input.id.includes("ip") || input.id.includes("mask") || input.id.includes("gw") || 
+                if(input.id.includes("ip-") || input.id.includes("mask") || input.id.includes("gw") || 
                     input.id.includes("ts") || input.id.includes("tc") || input.id.includes("timer") ||
                     input.id.includes("port") || input.id.includes("slaveid")){
                     input.value = (input.value).replace(/[^0-9]/g,'');
                 }
     
-                if(input.id.includes("ip") || input.id.includes("mask") || input.id.includes("gw")){
+                if(input.id.includes("ip-") || input.id.includes("mask") || input.id.includes("gw")){
                     if(input.value > 255){ input.value = 255;}
                 }
                 if(input.id.includes("ts")){
@@ -292,7 +292,7 @@ function filterInput(input){
                     }
                 }
 
-                if(input.id.includes("ip") || input.id.includes("mask") || input.id.includes("gw") ||
+                if(input.id.includes("ip-") || input.id.includes("mask") || input.id.includes("gw") ||
                 input.id.includes("ts") || input.id.includes("tc") || input.id.includes("timer") || input.id.includes("port")){
                     
                     if(input.value.length == 0){
@@ -381,8 +381,6 @@ async function sendConfig(form, body){
     
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
-
-    console.log(data)
     
     for (const entry in data) {
         if(!isNaN(data[entry])) data[entry] = parseInt(data[entry]);
@@ -412,7 +410,7 @@ async function saveConfig(button){
             finished = await sendConfig(form, body);
         });
 
-        console.log(body);
+        // console.log(body);
         
         finished = true;
                 
@@ -433,7 +431,7 @@ async function saveConfig(button){
 
 function changeInfoConfig(button){
     
-    textarea = button.closest(".details-container").querySelector("textarea")
+    textarea = button.closest(".details-container").querySelector("#description");
     edit_btn = button.closest(".details-container").querySelector("#edit-info")
     save_btn = button.closest(".details-container").querySelector("#save-info")
     
@@ -444,7 +442,7 @@ function changeInfoConfig(button){
     } else {
         save_btn.style.display = "none"
         edit_btn.style.display = "block"
-        sendConfig(button.closest("form"))
+        // sendConfig(button.closest("form"))
         textarea.disabled = true;
     }
 }

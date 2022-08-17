@@ -77,6 +77,12 @@ static void uart_event_task(void *param)
                 } // ABCDEFGHIJKLMNOPQR
                 else if (strstr((char *)dtmp, test_command) != NULL)
                 {
+                    uint8_t version_major, version_minor, version_patch;
+                    sscanf(data->info->fw_version, "v%hhu.%hhu.%hhu", &version_major, &version_minor, &version_patch);
+
+                    // send version via uart: 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xnn, 0xnn, 0xnn
+                    uint8_t version_str[12] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, version_major, version_minor, version_patch};
+                    uart_write_bytes(UART_NUM, version_str, 12);
                 }
                 else
                 {
