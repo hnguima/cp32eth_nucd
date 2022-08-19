@@ -5,7 +5,7 @@ static const char *TAG = "uart";
 static QueueHandle_t uart_queue;
 
 char get_version_command[] = {0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x53, 0x00, 0x00, 0x03, 0x9A, 0x0E};
-char get_mac_command[] =     {0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x43, 0x03, 0x59, 0xAF};
+char get_mac_command[] = {0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x43, 0x03, 0x59, 0xAF};
 
 static void uart_event_task(void *param)
 {
@@ -78,22 +78,22 @@ static void uart_event_task(void *param)
                 } // ABCDEFGHIJKLMNOPQR
                 else if (strstr((char *)dtmp, get_version_command) != NULL)
                 {
-                    uint8_t version_major, version_minor, version_patch;
-                    sscanf(data->info->fw_version, "v%hhu.%hhu.%hhu", &version_major, &version_minor, &version_patch);
+                    uint8_t version[3];
+                    sscanf(data->info->fw_version, "v%hhu.%hhu.%hhu", &version[0], &version[1], &version[2]);
 
                     // send version via uart: 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xnn, 0xnn, 0xnn
-                    uint8_t version_str[15] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, version_major, version_minor, version_patch, 0x00, 0x00, 0x00};
+                    uint8_t version_str[15] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, version[0], version[1], version[2], 0x00, 0x00, 0x00};
                     uart_write_bytes(UART_NUM, version_str, 15);
                 }
-                // else if (strstr((char *)dtmp, get_mac_command) != NULL)
-                // {
-                //     uint8_t version_major, version_minor, version_patch;
-                //     sscanf(data->info->fw_version, "v%hhu.%hhu.%hhu", &version_major, &version_minor, &version_patch);
+                else if (strstr((char *)dtmp, get_mac_command) != NULL)
+                {
+                    uint8_t mac[6];
+                    sscanf(data->info->mac_addr, "%hhu:%hhu:%hhu:%hhu:%hhu:%hhu", &mac[0], &mac[1], &mac[2], &mac[3], &mac[4], &mac[5]);
 
-                //     // send version via uart: 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xnn, 0xnn, 0xnn
-                //     uint8_t mac_str[15] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, version_major, version_minor, version_patch};
-                //     uart_write_bytes(UART_NUM, version_str, 15);
-                // }
+                    // send version via uart: 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xnn, 0xnn, 0xnn
+                    uint8_t mac_str[15] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x50, 0xC2, mac[3], mac[4], mac[5], 0x00, 0x00, 0x00};
+                    uart_write_bytes(UART_NUM, mac_str, 15);
+                }
                 else
                 {
                     queue_data_t *queue_data = (queue_data_t *)malloc(sizeof(queue_data_t));
