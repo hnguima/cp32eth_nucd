@@ -5,7 +5,7 @@ static const char *TAG = "uart";
 static QueueHandle_t uart_queue;
 
 char get_version_command[] = {0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x53, 0x00, 0x00, 0x03, 0x9A, 0x0E};
-char get_mac_command[] = {0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x43, 0x03, 0x59, 0xAF};
+char get_mac_command[] = {0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x43, 0x00, 0x00, 0x03, 0x59, 0xAF};
 
 static void uart_event_task(void *param)
 {
@@ -63,8 +63,8 @@ static void uart_event_task(void *param)
                         host_port = *(uint16_t *)&config_str[80];
                         data->socket->port = host_port;
 
-                        printf("ip: %s, mask: %s, gw: %s, host_ip: %s, host_port: %d\n", ip_str, mask_str, gw_str, host_ip, host_port);
-                        printf("ip: %d, mask: %d, gw: %d, host_ip: %d, host_port: %d\n", data->ip->ip, data->ip->mask, data->ip->gateway, data->socket->ip, data->socket->port);
+                        // printf("ip: %s, mask: %s, gw: %s, host_ip: %s, host_port: %d\n", ip_str, mask_str, gw_str, host_ip, host_port);
+                        // printf("ip: %d, mask: %d, gw: %d, host_ip: %d, host_port: %d\n", data->ip->ip, data->ip->mask, data->ip->gateway, data->socket->ip, data->socket->port);
 
                         config_save(data);
                         system_reboot(6000);

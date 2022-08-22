@@ -47,6 +47,11 @@ void app_main(void)
 	};
 	gpio_config(&io_conf);
 
+	io_conf.mode = GPIO_MODE_INPUT;
+	io_conf.pin_bit_mask = GPIO_INPUT_PIN_SEL;
+	io_conf.pull_down_en = GPIO_PULLDOWN_ENABLE;
+	gpio_config(&io_conf);
+
 	gpio_set_level(PHY_ENABLE, 1);
 
 	// Inicializa armazenamento não-volatil
@@ -88,7 +93,11 @@ void app_main(void)
 
 	// Inicializa ethernet
 	SYSTEM_RETRY(ethernet_init(cp32eth->ip), err, TAG, 500, 10);
-	esp_event_handler_register(ETH_EVENT, ESP_EVENT_ANY_ID, &eth_led_handler, NULL);
+	if(gpio_get_level(LED_ONLINE) == 0)
+	{
+		gpio_set_direction(LED_ONLINE, GPIO_MODE_OUTPUT);
+		esp_event_handler_register(ETH_EVENT, ESP_EVENT_ANY_ID, &eth_led_handler, NULL);
+	}
 
 	// Inicializa server http
 	httpd_handle_t server = http_server_init(cp32eth);

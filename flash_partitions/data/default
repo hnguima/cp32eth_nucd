@@ -11,12 +11,7 @@
         "up_time": 0,
         "init_time": 0,
         "install_time": 0,
-        "available_mem": 0,
-        "test_arr": [
-            1,
-            2,
-            3
-        ]
+        "available_mem": 0
     },
     "login": {
         "username": "admin",
