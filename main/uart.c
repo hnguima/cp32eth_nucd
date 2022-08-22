@@ -89,8 +89,8 @@ static void uart_event_task(void *param)
                     uint8_t mac[6];
                     sscanf(data->info->mac_addr, "%hhu:%hhu:%hhu:%hhu:%hhu:%hhu", &mac[0], &mac[1], &mac[2], &mac[3], &mac[4], &mac[5]);
 
-                    uint8_t mac_str[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], 0x00, 0x00, 0x00};
-                    uart_write_bytes(UART_NUM, mac_str, 15);
+                    uint8_t mac_str[18] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x50, 0xc2, mac[3], mac[4], mac[5], 0x00, 0x00, 0x00};
+                    uart_write_bytes(UART_NUM, mac_str, 18);
                 }
                 else
                 {
