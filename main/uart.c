@@ -29,7 +29,8 @@ static void uart_event_task(void *param)
             case UART_DATA:
                 uart_read_bytes(UART_NUM, dtmp, event.size, portMAX_DELAY);
 
-                // ESP_LOG_BUFFER_HEXDUMP(TAG, dtmp, event.size, ESP_LOG_INFO);
+                ESP_LOGI(TAG, "Recebeu bytes:")
+                ESP_LOG_BUFFER_HEXDUMP(TAG, dtmp, event.size, ESP_LOG_INFO);
 
                 if (strstr((char *)dtmp, "ABCDEFGHIJKLMNOPQ") != NULL)
                 {

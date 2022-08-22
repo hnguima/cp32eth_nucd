@@ -1,7 +1,7 @@
 {
     "info": {
         "description": "Dispositivo: CP32ETH da NUCD",
-        "fw_version": "v1.0.5",
+        "fw_version": "v1.0.6",
         "hw_version": "1.0",
         "mac_addr": "00:00:00:00:00:00",
         "resets": 0,
@@ -33,6 +33,6 @@
     },
     "socket": {
         "ip": -1123964736,
-        "port": 30000
+        "port": 30001
     }
 }
