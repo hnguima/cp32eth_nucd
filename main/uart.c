@@ -81,8 +81,7 @@ static void uart_event_task(void *param)
                     uint8_t version[3];
                     sscanf(data->info->fw_version, "v%hhu.%hhu.%hhu", &version[0], &version[1], &version[2]);
 
-                    // send version via uart: 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xnn, 0xnn, 0xnn
-                    uint8_t version_str[15] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, version[0], version[1], version[2], 0x00, 0x00, 0x00};
+                    uint8_t version_str[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, version[0], version[1], version[2], 0x00, 0x00, 0x00};
                     uart_write_bytes(UART_NUM, version_str, 15);
                 }
                 else if (strstr((char *)dtmp, get_mac_command) != NULL)
@@ -90,8 +89,7 @@ static void uart_event_task(void *param)
                     uint8_t mac[6];
                     sscanf(data->info->mac_addr, "%hhu:%hhu:%hhu:%hhu:%hhu:%hhu", &mac[0], &mac[1], &mac[2], &mac[3], &mac[4], &mac[5]);
 
-                    // send version via uart: 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xnn, 0xnn, 0xnn
-                    uint8_t mac_str[15] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x50, 0xC2, mac[3], mac[4], mac[5], 0x00, 0x00, 0x00};
+                    uint8_t mac_str[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], 0x00, 0x00, 0x00};
                     uart_write_bytes(UART_NUM, mac_str, 15);
                 }
                 else
