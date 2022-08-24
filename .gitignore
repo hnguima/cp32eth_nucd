@@ -57,4 +57,4 @@ build/*
 comp_old/*
 embedded_flash/*
 test_config/*
-storage_data/config/*
+flash_partitions/*
