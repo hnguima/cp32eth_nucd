@@ -11,12 +11,12 @@ static void eth_led_handler(void *arg, esp_event_base_t event_base, int32_t even
 	switch (event_id)
 	{
 	case ETHERNET_EVENT_CONNECTED:
-		//turn on online led
+		// turn on online led
 		gpio_set_level(LED_ONLINE, 1);
 		break;
 
 	case ETHERNET_EVENT_DISCONNECTED:
-		//turn off online led
+		// turn off online led
 		gpio_set_level(LED_ONLINE, 0);
 		break;
 	}
@@ -32,7 +32,7 @@ void app_main(void)
 
 	// Cria o loop padrão de eventos que roda em segundo plano
 	SYSTEM_ERROR_CHECK(esp_event_loop_create_default(), err, TAG, "Erro ao inicializar o loop de eventos");
-	
+
 	SYSTEM_ERROR_CHECK(fs_mount(), err, TAG, "Erro ao inicializar o filesystem");
 	// SYSTEM_ERROR_CHECK(fs_check_default(), err, TAG, "Erro ao gerar a configuração default do fylesystem");
 	// SYSTEM_ERROR_CHECK(fs_load(&urt32_data), err, TAG, "Erro ao carregar o filesystem");
@@ -66,13 +66,13 @@ void app_main(void)
 	// Carrega as configurações da flash
 	cp32eth = calloc(1, sizeof(cp32eth_data_t));
 	SYSTEM_ERROR_CHECK(config_load(cp32eth), err, TAG, "Erro ao carregar o filesystem");
-	
+
 	// Atualiza o numero de resets
 	cp32eth->info->resets++;
 	uint8_t mac[6];
 	esp_efuse_mac_get_default(mac);
 	sprintf(cp32eth->info->mac_addr, "%02x:%02x:%02x:%02x:%02x:%02x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-
+	
 	// Inicializa tcp e uart queues
 	cp32eth->socket->queue = xQueueCreate(MAX_QUEUE_LENGTH, sizeof(queue_data_t *));
 	if (cp32eth->socket->queue == 0)
@@ -93,7 +93,7 @@ void app_main(void)
 
 	// Inicializa ethernet
 	SYSTEM_RETRY(ethernet_init(cp32eth->ip), err, TAG, 500, 10);
-	if(gpio_get_level(LED_ONLINE) == 0)
+	if (gpio_get_level(LED_ONLINE) == 0)
 	{
 		gpio_set_direction(LED_ONLINE, GPIO_MODE_OUTPUT);
 		esp_event_handler_register(ETH_EVENT, ESP_EVENT_ANY_ID, &eth_led_handler, NULL);
@@ -109,7 +109,6 @@ void app_main(void)
 
 	// Adiciona a task atual ao watchdog
 	SYSTEM_ERROR_CHECK(esp_task_wdt_add(NULL), err, TAG, "Erro ao adicionar a task atual ao watchdog");
-
 
 	while (1)
 	{
