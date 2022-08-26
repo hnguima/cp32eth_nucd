@@ -80,12 +80,7 @@ esp_err_t config_save(cp32eth_data_t *cp32eth)
     cJSON *config_old_json = cJSON_Parse(config_old_str);
     free(config_old_str);
 
-    if (config_old_json == NULL)
-    {
-        ESP_LOGW(TAG, "Erro ao parsear o arquivo de configuração");
-    }
-
-    if (cJSON_Compare(config_json, config_old_json, false))
+    if (config_old_json != NULL && cJSON_Compare(config_json, config_old_json, false))
     {
         ESP_LOGW(TAG, "Configuração não foi alterada, não salvar");
         cJSON_Delete(config_json);

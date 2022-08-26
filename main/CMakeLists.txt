@@ -17,4 +17,3 @@ idf_component_register( SRCS
                             "./networking/"
                             "./config/"
 )
-
