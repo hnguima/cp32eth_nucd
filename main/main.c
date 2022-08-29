@@ -6,22 +6,6 @@ static const char *TAG = "main";
 
 cp32eth_data_t *cp32eth;
 
-static void eth_led_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data)
-{
-	switch (event_id)
-	{
-	case ETHERNET_EVENT_CONNECTED:
-		// turn on online led
-		gpio_set_level(LED_ONLINE, 1);
-		break;
-
-	case ETHERNET_EVENT_DISCONNECTED:
-		// turn off online led
-		gpio_set_level(LED_ONLINE, 0);
-		break;
-	}
-}
-
 void app_main(void)
 {
 	esp_err_t err;
@@ -98,7 +82,6 @@ void app_main(void)
 	if (gpio_get_level(LED_ONLINE) == 0)
 	{
 		gpio_set_direction(LED_ONLINE, GPIO_MODE_OUTPUT);
-		esp_event_handler_register(ETH_EVENT, ESP_EVENT_ANY_ID, &eth_led_handler, NULL);
 	}
 
 	// Inicializa server http

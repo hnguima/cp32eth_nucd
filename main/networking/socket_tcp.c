@@ -367,6 +367,7 @@ void socket_client_task(void *vParam)
 				else if (socket_ctx->size_rx < 0)
 				{
 					ESP_LOGE(TAG, "erro recv(%d): socket not connected", errno);
+					socket_ctx->on_disconnect_cb();
 
 					//Deleta a task atual da lista de tasks monitoradas por watchdog
 					// esp_task_wdt_delete(NULL);

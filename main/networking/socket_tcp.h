@@ -43,6 +43,7 @@ typedef struct
 
     void (*recv_cb)(uint8_t *data_rx, int16_t size_rx);
     void (*on_connect_cb)();
+    void (*on_disconnect_cb)();
 
     bool is_persistent;
     uint8_t retry_max;

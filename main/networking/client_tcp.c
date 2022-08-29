@@ -6,13 +6,24 @@ esp_timer_handle_t wtd_tcp_handler;
 
 #define TCP_WTD_TIMER_INTERVAL 15 * 60 * 1000 * 1000 // 15 minutes
 
+#define CONNECTED_LED 5
+
+
 void client_tcp_on_connect_cb()
 {
     ESP_LOGI(TAG, "conectado ao servidor");
+    gpio_set_level(CONNECTED_LED, 1);
 
     // feed the watchdog
     esp_timer_stop(wtd_tcp_handler);
     esp_timer_start_once(wtd_tcp_handler, TCP_WTD_TIMER_INTERVAL);
+}
+
+void client_tcp_on_disconnect_cb()
+{
+    ESP_LOGI(TAG, "desconectado do servidor");
+
+    gpio_set_level(CONNECTED_LED, 0);
 }
 
 void client_tcp_recv_cb(uint8_t *data_rx, int16_t size_rx)
@@ -79,6 +90,7 @@ esp_err_t client_tcp_init(client_tcp_data_t *config)
     client_tcp.retry_delay = 5 * 1000; // 5 seconds
     client_tcp.recv_cb = client_tcp_recv_cb;
     client_tcp.on_connect_cb = client_tcp_on_connect_cb;
+    client_tcp.on_disconnect_cb = client_tcp_on_disconnect_cb;
 
     err = socket_task_create(&client_tcp, SOCKET_TYPE_CLIENT);
 
