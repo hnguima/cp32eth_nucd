@@ -68,8 +68,16 @@ static void uart_event_task(void *param)
                         ESP_LOGI(TAG, "ip: %d, mask: %d, gw: %d, host_ip: %d, host_port: %d\n",
                                  data->ip->ip, data->ip->mask, data->ip->gateway, data->socket->ip, data->socket->port);
 
+                        // saving old config
+                        cJSON *old_config_json = config_parse(data, CONFIG_ALL);
+                        char *old_config_str = cJSON_Print(old_config_json);
+                        cJSON_Delete(old_config_json);
+
+                        fs_write_file("/data/old_config", old_config_str);
+                        free(old_config_str);
+                        
                         config_save(data);
-                        system_reboot(6000);
+                        system_reboot(2000);
                     }
                     else if (dtmp[17] == 'R')
                     {

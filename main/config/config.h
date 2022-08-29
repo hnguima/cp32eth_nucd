@@ -36,6 +36,7 @@
 #define SYSTEM_REBOOT_EVENT BIT2
 
 #define CONFIG_FILE "/data/config"
+#define CONFIG_OLD_FILE "/data/config_old"
 #define CONFIG_DEFAULT_FILE "/data/default"
 #define CONFIG_SAVE_DELAY 5 * 60 * 1000 // 5 minutes
 

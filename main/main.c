@@ -33,6 +33,8 @@ void app_main(void)
 	// Cria o loop padrão de eventos que roda em segundo plano
 	SYSTEM_ERROR_CHECK(esp_event_loop_create_default(), err, TAG, "Erro ao inicializar o loop de eventos");
 
+	// vTaskDelay(5000 / portTICK_PERIOD_MS);
+
 	SYSTEM_ERROR_CHECK(fs_mount(), err, TAG, "Erro ao inicializar o filesystem");
 	// SYSTEM_ERROR_CHECK(fs_check_default(), err, TAG, "Erro ao gerar a configuração default do fylesystem");
 	// SYSTEM_ERROR_CHECK(fs_load(&urt32_data), err, TAG, "Erro ao carregar o filesystem");
@@ -72,7 +74,7 @@ void app_main(void)
 	uint8_t mac[6];
 	esp_efuse_mac_get_default(mac);
 	sprintf(cp32eth->info->mac_addr, "%02x:%02x:%02x:%02x:%02x:%02x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-	
+
 	// Inicializa tcp e uart queues
 	cp32eth->socket->queue = xQueueCreate(MAX_QUEUE_LENGTH, sizeof(queue_data_t *));
 	if (cp32eth->socket->queue == 0)

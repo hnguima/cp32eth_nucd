@@ -12,9 +12,9 @@ static void config_save_task(void *param)
 
     while (1)
     {
-        config_save(cp32eth);
-
         vTaskDelay(CONFIG_SAVE_DELAY / portTICK_PERIOD_MS);
+
+        config_save(cp32eth);
     }
 }
 
@@ -38,16 +38,26 @@ esp_err_t config_load(cp32eth_data_t *cp32eth)
 
     if (config_json == NULL)
     {
-        ESP_LOGW(TAG, "arqivo de configuração não encontrado, carregando default");
 
-        config_str = fs_read_file(CONFIG_DEFAULT_FILE, NULL);
+        ESP_LOGW(TAG, "arqivo de configuração não encontrado, carregando backup");
+
+        config_str = fs_read_file(CONFIG_OLD_FILE, NULL);
         config_json = cJSON_Parse(config_str);
         free(config_str);
 
         if (config_json == NULL)
         {
-            ESP_LOGE(TAG, "arquivo de configuração default não encontrado");
-            return ESP_FAIL;
+            ESP_LOGE(TAG, "arquivo de backup não encontrado, carregando default");
+            
+            config_str = fs_read_file(CONFIG_DEFAULT_FILE, NULL);
+            config_json = cJSON_Parse(config_str);
+            free(config_str);
+
+            if (config_json == NULL)
+            {
+                ESP_LOGE(TAG, "arquivo de configuração default não encontrado");
+                return ESP_FAIL;
+            }
         }
     }
 
@@ -91,7 +101,7 @@ esp_err_t config_save(cp32eth_data_t *cp32eth)
     char *config_str = cJSON_Print(config_json);
     if (config_str == NULL)
     {
-        ESP_LOGE(TAG, "Erro ao imprimir configuração");
+        ESP_LOGE(TAG, "Erro ao parsear configuração para string");
         return ESP_FAIL;
     }
 

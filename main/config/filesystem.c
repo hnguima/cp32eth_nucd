@@ -5,7 +5,7 @@ static const char *TAG = "Filesystem";
 esp_vfs_spiffs_conf_t fs_server = {
     .base_path = "/server",
     .partition_label = "storage0",
-    .max_files = 20,
+    .max_files = 5,
     .format_if_mount_failed = false,
 };
 
